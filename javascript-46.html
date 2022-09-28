@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    #root {
+      width: 100vw;
+      height: 100vh;
+      background: #333;
+    }
+
+    #box {
+      width: 100px;
+      height: 100px;
+      background-color: #ccc;
+    }
+
+    .felx-center {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root" class="flex-center">
+    <div id="box">
+    </div>
+  </div>
+</body>
+<script>
+  const dom = {
+    root: document.getElementById('root'),
+    box: document.getElementById('box'),
+  }
+  const { box } = dom
+  box.style.position = "absolute";
+  box.style.top = "0px";
+  box.style.left = "0px";
+
+
+
+  const posValue = {
+    top: 0,
+    left: 0,
+  }
+
+  let state = true;
+  box.addEventListener('click', () => {
+    let moveTop = setInterval(() => {
+      console.log('interval start')
+      if (state === true) {
+        posValue.top++;
+        box.style.top = posValue.top + "px";
+        console.log(box.style.top)
+        if (posValue.top === 500) {
+          clearInterval(moveTop);
+          state = false;
+          posValue.top = 0;
+          box.style.top = posValue.top + "px";
+        } else {
+          state = true;
+        }
+      }
+    }, 16)
+  })
+
+  const promise = new Promise((resolve, rejected) => {
+    let state = true
+    box.addEventListener('click', () => {
+      console.log("interval start")
+      if (state === true) {
+        posValue.top++;
+        box.style.top = posValue.top + "px";
+        resolve(posValue.top = 500)
+      }
+    },16)
+  })
+
+
+
+
+</script>
+
+</html>
