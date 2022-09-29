@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    #root {
+      width: 100vw;
+      height: 100vh;
+      background: #333;
+    }
+
+    #box {
+      width: 100px;
+      height: 100px;
+      background-color: #ccc;
+      transition: ease 0.5s;
+    }
+
+    .felx-center {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root" class="flex-center">
+    <div id="box">
+    </div>
+  </div>
+  <script>
+    const dom = {
+      root: document.getElementById('root'),
+      box: document.getElementById('box'),
+    }
+
+    const { box } = dom
+    box.style.position = "absolute";
+    box.style.top = "0px";
+    box.style.left = "0px";
+
+    const posValue = {
+      top: 0,
+      left: 0,
+    }
+    let value = true;
+
+    const movingLeft = () => {
+      return new Promise((resolve, reject) => {
+        let leftMoving = setInterval(() => {
+          if (value === true) {
+            posValue.left++;
+            box.style.left = posValue.left + "px"
+            if (posValue.left === 200) {
+              clearInterval(leftMoving)
+              console.log("성공")
+              resolve("left clear!") // 위에 코드들을 이행되면 처리
+            }
+          }
+        }, 16)
+      })
+    }
+
+    // movingLeft에 promise를 사용하겠다고 선언해줬다.
+    // promise를 선언하는 순간 비동기 작업이 시작된다.
+    // leftmovng에 셋인터벌을 할당하는데 value에 값이 true라면 0.016초 마다 
+    // 한번씩 posValue의 left값을 1씩 증가시키고, box의 left값을 posvalue 값으로 지정해준다.
+    // 그리고 만약 posValue.left값이 200과 일치하면, leftMoving 인터벌을 종료한다.
+    // 위 과정들을 성공하게 되면 resolve를 호출하여 ()값이 출력된다.
+
+
+    const movingTop = () => {
+      return new Promise((resolve, reject) => {
+        let topMoving = setInterval(() => {
+          if (value === true) {
+            posValue.top++;
+            box.style.top = posValue.top + "px"
+            if (posValue.top === 200) {
+              clearInterval(topMoving)
+              console.log("성공")
+              resolve("top clear")
+            }
+          }
+        }, 16)
+      })
+    }
+
+    // movingTop에 Promise를 선언해주었다.
+    // topmoving 변수에 셋인터벌을 할당시키는데, value의 값이 true와 일치하면
+    // posValue.top이 0.016초마다 1씩 증가한다. 
+    // box.style.top에 posValue.top값을 할당시킨다. px단위값이 필요하니까
+    // 뒤에 붙여줘서 할당시키고
+    // posValue.top이 200과 일치하면 topMoving셋인터벌을 종료시킨다.
+    // 
+
+
+    box.addEventListener('click', () => {
+      movingLeft().then(movingTop)
+    })
+
+    // box에 이벤트를 생성해준다.
+    // 클릭을 하게되면, movingLeft를 호출하면 promise가 리턴된다.
+    // 리턴해주고 결과물이 에러없이 처리되면
+    // resolve값을 받을 수 있어. ()괄호값이 출력되고
+    // 다음동작으로 then을 받을 수 있다.
+    // 다음동작으로 movingTop이란 변수를 호출하는데
+    // promise가 리턴되서  resolve까지 실행하고 에러가 없어서 그대로
+    // 괄호값을 출력한다.
+  </script>
+</body>
+
+</html>
