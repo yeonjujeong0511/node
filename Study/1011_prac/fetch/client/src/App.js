@@ -1,10 +1,15 @@
-import './App.css';
+//fetch 기본
+//axios 라이브러리
 
-function App() {
-  fetch('http://localhost:5000/api/todo')
+import "./App.css";
+import useState from "usestate";
+useEffect())=>{
+  const [todoList, setTodoList] = useState("");
+  
+  fetch("http://localhost:5000/api/todo")
     .then((response) => response.json())
-    .then((data) => console.log(data));
-
+    .then((data) => setTodoList(data));
+  }
   return (
     <>
       <h1>TODO LIST</h1>

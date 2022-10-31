@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
 
+app.use(cors());
 // body parser
 app.use(express.json()); // 파싱을 위한 어플리케이션?
 app.use(express.urlencoded({ extended: true })); // 파싱
