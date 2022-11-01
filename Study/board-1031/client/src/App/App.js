@@ -2,8 +2,9 @@ import styled from 'styled-components';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import './App.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ReactHtmlParser from 'html-react-parser';
+import axios from 'axios';
 
 const MainBox = styled.div`
   display: flex;
@@ -12,7 +13,7 @@ const MainBox = styled.div`
 
   & > div:nth-child(2) {
     width: 500px;
-    height: 200px;
+    min-height: 200px;
     border: 1px solid;
     text-align: center;
   }
@@ -46,6 +47,23 @@ function App() {
   });
   const [viewContent, setViewContent] = useState([]);
 
+  useEffect(() => {
+    axios.get('http://localhost:8080/api/insert').then((response) => {
+      setViewContent(response.data);
+    });
+  }, [viewContent]);
+
+  const submitReview = () => {
+    axios
+      .post('http://localhost:8080/api/insert', {
+        title: musicContent.title,
+        content: musicContent.content,
+      })
+      .then(() => {
+        alert('등록 완료');
+      });
+  };
+
   const getValue = (e) => {
     const { name, value } = e.target;
     setMusicContent({
@@ -76,7 +94,7 @@ function App() {
         />
         <CKEditor
           editor={ClassicEditor}
-          data='<p>Hello from CKEditor 5!</p>'
+          //placeholder='내용을 입력하세요'
           onReady={(editor) => {
             // You can store the "editor" and use when it is needed.
             console.log('Editor is ready to use!', editor);
@@ -98,13 +116,7 @@ function App() {
           }}
         />
       </div>
-      <button
-        onClick={() => {
-          setViewContent(viewContent.concat({ ...musicContent }));
-        }}
-      >
-        등록
-      </button>
+      <button onClick={submitReview}>등록</button>
     </MainBox>
   );
 }
