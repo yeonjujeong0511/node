@@ -133,8 +133,8 @@ function App() {
           config={{
             // (4)
             extraPlugins: [uploadPlugin],
+            placeholder: '내용을 작성해주세요!',
           }}
-          data='<p>Hello from CKEditor 5!</p>'
           onReady={(editor) => {
             // You can store the "editor" and use when it is needed.
             // console.log('Editor is ready to use!', editor);
