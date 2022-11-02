@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-import styled from "styled-components";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import "./App.css";
-import { useState } from "react";
-import ReactHtmlParser from "html-react-parser";
-import Axios from "axios";
-=======
 import styled from 'styled-components';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
@@ -14,7 +5,6 @@ import './App.css';
 import { useEffect, useState } from 'react';
 import ReactHtmlParser from 'html-react-parser';
 import axios from 'axios';
->>>>>>> f179ccc4a59217fe1d03b7ffa9c79d3e283701ed
 
 const MainBox = styled.div`
   display: flex;
@@ -30,7 +20,7 @@ const MainBox = styled.div`
 
   & > div:nth-child(3) {
     width: 500px;
-    height: 500px;
+    min-height: 500px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -52,25 +42,52 @@ const MainBox = styled.div`
 
 function App() {
   const [musicContent, setMusicContent] = useState({
-    title: "",
-    content: "",
+    title: '',
+    content: '',
   });
   const [viewContent, setViewContent] = useState([]);
+  const [flag, setFlag] = useState(false);
+  const imgLink = 'http://localhost:8080/images';
 
-<<<<<<< HEAD
-  const submitReview = () => {
-    Axios.post("http://localhost:8080/api/insert", {
-      title: musicContent.title,
-      content: musicContent.content,
-    }).then(() => {
-      alert("등록 완료!");
-    });
-=======
   useEffect(() => {
     axios.get('http://localhost:8080/api/insert').then((response) => {
       setViewContent(response.data);
     });
   }, [viewContent]);
+  const customUploadAdapter = (loader) => {
+    // (2)
+    return {
+      upload() {
+        return new Promise((resolve, reject) => {
+          const data = new FormData();
+          loader.file.then((file) => {
+            data.append('name', file.name);
+            data.append('file', file);
+
+            axios
+              .post('http://localhost:8080/upload', data)
+              .then((res) => {
+                if (!flag) {
+                  setFlag(true);
+                  // setImage(res.data.filename);
+                }
+                resolve({
+                  default: `${imgLink}/${res.data.filename}`,
+                });
+              })
+              .catch((err) => reject(err));
+          });
+        });
+      },
+    };
+  };
+
+  function uploadPlugin(editor) {
+    // (3)
+    editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+      return customUploadAdapter(loader);
+    };
+  }
 
   const submitReview = () => {
     axios
@@ -81,7 +98,6 @@ function App() {
       .then(() => {
         alert('등록 완료');
       });
->>>>>>> f179ccc4a59217fe1d03b7ffa9c79d3e283701ed
   };
 
   const getValue = (e) => {
@@ -107,21 +123,21 @@ function App() {
       </div>
       <div>
         <input
-          type="text"
-          placeholder="제목"
+          type='text'
+          placeholder='제목'
           onChange={getValue}
-          name="title"
+          name='title'
         />
         <CKEditor
           editor={ClassicEditor}
-<<<<<<< HEAD
-          data="<p>Hello from CKEditor 5!</p>"
-=======
-          //placeholder='내용을 입력하세요'
->>>>>>> f179ccc4a59217fe1d03b7ffa9c79d3e283701ed
+          config={{
+            // (4)
+            extraPlugins: [uploadPlugin],
+          }}
+          data='<p>Hello from CKEditor 5!</p>'
           onReady={(editor) => {
             // You can store the "editor" and use when it is needed.
-            console.log("Editor is ready to use!", editor);
+            // console.log('Editor is ready to use!', editor);
           }}
           onChange={(event, editor) => {
             const data = editor.getData();
@@ -133,10 +149,10 @@ function App() {
             console.log(musicContent);
           }}
           onBlur={(event, editor) => {
-            console.log("Blur.", editor);
+            //console.log('Blur.', editor);
           }}
           onFocus={(event, editor) => {
-            console.log("Focus.", editor);
+            //console.log('Focus.', editor);
           }}
         />
       </div>
