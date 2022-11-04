@@ -8,7 +8,7 @@ const multer = require('multer');
 const path = require('path');
 const { v4: uuid } = require('uuid');
 const mime = require('mime-types');
-const PORT = process.env.port || 8080;
+const PORT = process.env.port || 7777;
 
 const db = mysql.createPool({
   host: 'localhost',
